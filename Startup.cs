@@ -13,15 +13,17 @@ namespace Foo
 {
     public class Startup
     {
-        public Startup(IHostingEnvironment env)
+        public Startup(IHostingEnvironment env, ILoggerFactory logFactory)
         {
-            var builder = new ConfigurationBuilder()
+            logFactory.AddConsole(minLevel: LogLevel.Debug);
+            
+                var builder = new ConfigurationBuilder()
                 .SetBasePath(env.ContentRootPath)
                 .AddJsonFile("appsettings.json", optional: true, reloadOnChange: true)
                 .AddJsonFile($"appsettings.{env.EnvironmentName}.json", optional: true)
                 .AddEnvironmentVariables()
 
-                .AddConfigServer(env);
+                .AddConfigServer(env, logFactory);
             Configuration = builder.Build();
         }
 
